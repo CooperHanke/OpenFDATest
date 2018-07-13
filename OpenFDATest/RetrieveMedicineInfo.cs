@@ -16,7 +16,7 @@ namespace OpenFDATest
 
     partial class Program
     {
-        public static void GetMedInfo(string desiredSearch)
+        private static SortedDictionary<string, string> GetMedInfo(string desiredSearch)
         {
             string url = "https://api.fda.gov/drug/label.json?search=";
             var request = (HttpWebRequest)WebRequest.Create($"{url}{desiredSearch}&limit=1");
@@ -35,15 +35,11 @@ namespace OpenFDATest
                     content = sr.ReadToEnd();
                 }
             }
-            Console.WriteLine("Finished reading the response");
-            SortedDictionary<string, string> thing = SortedMedInfo(content);
-            if (thing.Count > 0)
-            {
-                Console.WriteLine($"We have {thing.Count} entries from the SortedMedInfo method");
-            }
+            SortedDictionary<string, string> listings = SortedMedInfo(content);
+            return listings;
         }
         
-        public static SortedDictionary<string, string> SortedMedInfo (string content)
+        private static SortedDictionary<string, string> SortedMedInfo (string content)
         {
             SortedDictionary<string, string> temp = new SortedDictionary<string, string>();
             try
