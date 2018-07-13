@@ -33,8 +33,9 @@ namespace OpenFDATest
             catch (WebException ex)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("Sorry, that medicine was not found, please run the application again!");
-                Environment.Exit(Convert.ToInt16(ex.Status));
+                Console.WriteLine("Sorry, that medicine was not found!");
+                Console.ForegroundColor = ConsoleColor.White;
+                inquiry();
             }
 
             string content = string.Empty;
