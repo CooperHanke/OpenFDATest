@@ -25,7 +25,17 @@ namespace OpenFDATest
             request.UserAgent = "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36";
             request.AutomaticDecompression = DecompressionMethods.Deflate | DecompressionMethods.GZip;
 
-            var response = (HttpWebResponse)request.GetResponse();
+            HttpWebResponse response = null;
+            try
+            {
+                response = (HttpWebResponse)request.GetResponse();
+            }
+            catch (WebException ex)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Sorry, that medicine was not found, please run the application again!");
+                Environment.Exit(Convert.ToInt16(ex.Status));
+            }
 
             string content = string.Empty;
             using (var stream = response.GetResponseStream())

@@ -10,37 +10,42 @@ namespace OpenFDATest
     {
         static void Main(string[] args)
         {
-            string search = "advil";
+            Console.WriteLine("OpenFDA Search Tool by Cooper");
+            inquiry();
+        }
+
+        static void inquiry()
+        {
+            Console.Write("Type in medicine to look up or \"quit\" to quit\n> ");
+            string search = Console.ReadLine();
+            if (search.ToLower().Equals("quit"))
+            {
+                Environment.Exit(0);
+            }
             SortedDictionary<string, string> temp = new SortedDictionary<string, string>(GetMedInfo(search));
-            Console.WriteLine($"Length of incoming data: {temp.Count}");
+            SortedDictionary<string, string> result = new SortedDictionary<string, string>();
             foreach (var entry in temp)
             {
                 var itemKey = entry.Key;
                 var itemValue = entry.Value;
-                if (itemKey.IndexOf("table") > -1 || itemKey.IndexOf("open") > -1)
+                foreach (string term in FilterEntries.ListEntries())
                 {
-                    continue;
+                    if (itemKey.Equals(term))
+                    {
+                        result.Add(itemKey, itemValue);
+                    }
                 }
-                if (itemKey.IndexOf("ingredient") > -1)
-                {
-                    Console.ForegroundColor = ConsoleColor.Green;
-                    Console.WriteLine($"Matched entry: {entry.Key}");
-                    continue;
-                }
-                if (itemKey.IndexOf("effective_time") > -1)
-                {
-                    Console.ForegroundColor = ConsoleColor.Yellow;
-                    string date = entry.Value;
-                    // moved the functionality of getting a date to a new class
-                    DateTime lastUpdated = SortDates.parseDate(date);
-                    Console.WriteLine(lastUpdated.ToLongDateString());
-                    continue;
-                }
-                Console.ForegroundColor = ConsoleColor.White;
-                Console.WriteLine($"We have the following key: {entry.Key}");
             }
-            // TODO: take each medicine and make it into a Medicine item using the class
-            Console.ReadKey();
+            foreach (var item in result)
+            {
+                Console.ForegroundColor = ConsoleColor.Green;
+                // remove the underscores
+                Console.Write($"{item.Key.ToUpper()} ");
+                Console.ForegroundColor = ConsoleColor.White;
+                // format the item.Value to have no braces
+                Console.WriteLine($"{item.Value}");
+            }
+            inquiry();
         }
     }
 }
